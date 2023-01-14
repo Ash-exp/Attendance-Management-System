@@ -1,6 +1,6 @@
 package controllers
 
-import "github.com/Ash-exp/Attendance-Management-System/middlewares"
+import "github.com/Ash-exp/Attendance-Management-System/api/middlewares"
 
 func (s *Server) initializeRoutes() {
 
@@ -21,10 +21,15 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/teachers/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareJSON(s.UpdateTeacher))).Methods("PUT")
 	s.Router.HandleFunc("/teachers/{id}", middlewares.SetMiddlewareJSON(s.DeleteTeacher)).Methods("DELETE")
 	
-	//Attendance routes
+	//Student Attendance routes
 	s.Router.HandleFunc("/attendance", middlewares.SetMiddlewareJSON(s.CreateAttendance)).Methods("POST")
 	s.Router.HandleFunc("/attendance", middlewares.SetMiddlewareJSON(s.GetAttendances)).Methods("GET")
 	s.Router.HandleFunc("/attendance/{id}", middlewares.SetMiddlewareJSON(s.GetAttendance)).Methods("GET")
-	s.Router.HandleFunc("/attendance/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareJSON(s.UpdateAttendance))).Methods("PUT")
+	s.Router.HandleFunc("/attendance/{id}", middlewares.SetMiddlewareJSON(s.UpdateAttendance)).Methods("PUT")
+	
+	//Teacher Attendance routes
+	s.Router.HandleFunc("/teacher-attendance", middlewares.SetMiddlewareJSON(s.CreateTeacherAttendance)).Methods("POST")
+	s.Router.HandleFunc("/teacher-attendance/{id}", middlewares.SetMiddlewareJSON(s.GetTeacherAttendance)).Methods("GET")
+	s.Router.HandleFunc("/teacher-attendance/{id}", middlewares.SetMiddlewareJSON(s.UpdateTeacherAttendance)).Methods("PUT")
 
 }

@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
+	"github.com/Ash-exp/Attendance-Management-System/api/controllers"
+	"github.com/Ash-exp/Attendance-Management-System/api/seed"
 	"github.com/joho/godotenv"
-	"github.com/Ash-exp/Attendance-Management-System/controllers"
-	"github.com/Ash-exp/Attendance-Management-System/seed"
 )
 
 var server = controllers.Server{}

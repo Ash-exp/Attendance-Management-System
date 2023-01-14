@@ -10,7 +10,7 @@ import (
 
 	_ "github.com/jinzhu/gorm/dialects/postgres" //postgres database driver
 
-	"github.com/Ash-exp/Attendance-Management-System/models"
+	"github.com/Ash-exp/Attendance-Management-System/api/models"
 )
 
 type Server struct {
@@ -33,7 +33,7 @@ func (server *Server) Initialize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, D
 		}
 	}
 
-	server.DB.Debug().AutoMigrate(&models.User{}, &models.Teacher{}, &models.Attendance{}) //database migration
+	server.DB.Debug().AutoMigrate(&models.User{}, &models.Teacher{}, &models.Attendance{}, &models.Log{}, &models.TeacherAttendance{}, &models.TeacherLog{}) //database migration
 
 	server.Router = mux.NewRouter()
 

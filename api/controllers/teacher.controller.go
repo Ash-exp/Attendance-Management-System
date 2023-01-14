@@ -7,31 +7,31 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Ash-exp/Attendance-Management-System/api/models"
+	"github.com/Ash-exp/Attendance-Management-System/api/responses"
+	"github.com/Ash-exp/Attendance-Management-System/api/utils/formaterror"
 	"github.com/gorilla/mux"
-	"github.com/Ash-exp/Attendance-Management-System/models"
-	"github.com/Ash-exp/Attendance-Management-System/responses"
-	"github.com/Ash-exp/Attendance-Management-System/utils/formaterror"
 )
 
-func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (server *Server) CreateTeacher(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 	}
-	user := models.User{}
-	err = json.Unmarshal(body, &user)
+	teacher := models.Teacher{}
+	err = json.Unmarshal(body, &teacher)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	user.Prepare()
-	err = user.Validate("")
+	teacher.Prepare()
+	err = teacher.Validate("")
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	userCreated, err := user.SaveUser(server.DB)
+	teacherCreated, err := teacher.SaveTeacher(server.DB)
 
 	if err != nil {
 
@@ -40,23 +40,23 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusInternalServerError, formattedError)
 		return
 	}
-	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, userCreated.ID))
-	responses.JSON(w, http.StatusCreated, userCreated)
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.RequestURI, teacherCreated.ID))
+	responses.JSON(w, http.StatusCreated, teacherCreated)
 }
 
-func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
+func (server *Server) GetTeachers(w http.ResponseWriter, r *http.Request) {
 
-	user := models.User{}
+	teacher := models.Teacher{}
 
-	users, err := user.FindAllUsers(server.DB)
+	teachers, err := teacher.FindAllTeachers(server.DB)
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return
 	}
-	responses.JSON(w, http.StatusOK, users)
+	responses.JSON(w, http.StatusOK, teachers)
 }
 
-func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
+func (server *Server) GetTeacher(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
@@ -64,16 +64,16 @@ func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
-	user := models.User{}
-	userGotten, err := user.FindUserByID(server.DB, uint32(uid))
+	teacher := models.Teacher{}
+	teacherGotten, err := teacher.FindTeacherByID(server.DB, uint32(uid))
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
-	responses.JSON(w, http.StatusOK, userGotten)
+	responses.JSON(w, http.StatusOK, teacherGotten)
 }
 
-func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (server *Server) UpdateTeacher(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
@@ -86,40 +86,39 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	user := models.User{}
-	err = json.Unmarshal(body, &user)
+	teacher := models.Teacher{}
+	err = json.Unmarshal(body, &teacher)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	user.Prepare()
-	err = user.Validate("update")
+	teacher.Prepare()
+	err = teacher.Validate("update")
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	updatedUser, err := user.UpdateAUser(server.DB, uint32(uid))
+	updatedTeacher, err := teacher.UpdateATeacher(server.DB, uint32(uid))
 	if err != nil {
-		fmt.Println(err)
 		formattedError := formaterror.FormatError(err.Error())
 		responses.ERROR(w, http.StatusInternalServerError, formattedError)
 		return
 	}
-	responses.JSON(w, http.StatusOK, updatedUser)
+	responses.JSON(w, http.StatusOK, updatedTeacher)
 }
 
-func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
+func (server *Server) DeleteTeacher(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 
-	user := models.User{}
+	teacher := models.Teacher{}
 
 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {
 		responses.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
-	_, err = user.DeleteAUser(server.DB, uint32(uid))
+	_, err = teacher.DeleteATeacher(server.DB, uint32(uid))
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
 		return

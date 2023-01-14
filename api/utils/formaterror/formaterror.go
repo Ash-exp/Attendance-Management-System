@@ -3,10 +3,11 @@ package formaterror
 import (
 	"errors"
 	"strings"
+	"fmt"
 )
 
 func FormatError(err string) error {
-
+	fmt.Println(err)
 	if strings.Contains(err, "nickname") {
 		return errors.New("Nickname Already Taken")
 	}
